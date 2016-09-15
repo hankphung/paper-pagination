@@ -1,0 +1,84 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-menu/paper-menu.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-button/paper-button.html">
+
+<dom-module id="paper-pagination">
+	<style >
+		paper-item, paper-button{
+			float: left;
+		}
+	</style>
+    <template>
+	    <!--<paper-button on-tap="prev">prev</paper-button>-->
+		  <paper-menu selected="{{current}}" selected-attribute="page">
+		      <!--hidden item take place 0 so, first item will be 1 -->
+			    <paper-item page="0" hidden="true"></paper-item>
+  			  <template is="dom-repeat" items="[[pages]]" restamp="true">
+  		  		<paper-item page="[[item]]">[[item]]</paper-item>
+  		  	</template>
+		  </paper-menu>
+		  <!--<paper-button on-tap="next">next</paper-button>-->
+    </template>
+    <script>
+    /**
+     * Usage
+     * <paper-pagin page-size="5" total="21" current="{{current}}" offset="{{ose}}"></paper-pagin>
+       <span>        {{current}} - {{ose}}</span>
+     *  To observe the change on current, use observer
+     *    observer:['_currentChange(current)'
+	      ],
+	      _currentChange:function(c){
+	        console.log(c)
+	      },
+     */
+        Polymer({
+            is: 'paper-pagination',
+            properties: {
+                pageSize: {
+                    type: Number
+                },
+                total: {
+                    type: Number
+                },
+                pages: {
+                    type: Array,
+                    readOnly: true,
+                    computed: '_calculatePages(pageSize,total)'
+                },
+                current: {
+                    type: Number,
+                    value:1,
+                    reflectToAttribute:true,
+                    notify: true,
+                },
+                offset: {
+                    type: Number,
+                    readOnly: true,
+                    notify: true,
+                    computed: '_calculateOffset(current,pageSize)'
+                },
+                total: Number
+            },
+            prev:function(){
+				      if  (this.current && this.current > 1) 
+				 	      this.current -=1;
+            },
+            next:function(){
+            	if (this.current && this.current < this.pageCount) 
+           				this.current +=1;
+            },
+            _calculateOffset: function(current, pageSize) {
+                return (current - 1) * pageSize;
+            },
+            _calculatePages: function(size, total) {
+                var totalPage =this.pageCount=   Math.ceil(total / size);
+                var result = []
+                for (i = 1; i <= totalPage; i++) {
+                    result.push(i);
+                }
+                return result;
+            }
+        })
+    </script>
+</dom-module>
