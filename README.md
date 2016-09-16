@@ -21,7 +21,6 @@ Clone this repo or install by bower. `bower install paper-pagination`
 
 Properties | Type| Description
 ------------ | ------------- | -------------
-
 pageSize | Number | Number of items per page
 total | Number | Total items count
 rangeSize | Number | Number of visible page item on large collection.
