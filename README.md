@@ -6,8 +6,8 @@ Polymer pagination element. Input record count, pagesize to get list of page cho
 Clone this repo or install by bower. `bower install paper-pagination`
 ## Usage
 ```
-  <paper-pagin page-size="5" total="21" current-page="{{current}}" offset="{{ose}}"></paper-pagin>
-  <span> page:{{current}} <br/> offset:{{ose}}</span>
+  <paper-pagin page-size="5" total="21" current-page="{{current}}" offset="{{skip}}"></paper-pagin>
+  <span> page:{{current}} <br/> offset:{{skip}}</span>
 ```
 To observe the change on current, use observer
 ```javascript
