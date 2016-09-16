@@ -21,17 +21,7 @@
 		  <!--<paper-button on-tap="next">next</paper-button>-->
     </template>
     <script>
-    /**
-     * Usage
-     * <paper-pagin page-size="5" total="21" current="{{current}}" offset="{{ose}}"></paper-pagin>
-       <span>        {{current}} - {{ose}}</span>
-     *  To observe the change on current, use observer
-     *    observer:['_currentChange(current)'
-	      ],
-	      _currentChange:function(c){
-	        console.log(c)
-	      },
-     */
+  
         Polymer({
             is: 'paper-pagination',
             properties: {
@@ -46,7 +36,11 @@
                     readOnly: true,
                     computed: '_calculatePages(pageSize,total)'
                 },
-                current: {
+                rangeSize: {
+                    type: Number,
+                    value:10,
+                },
+                currentPage: {
                     type: Number,
                     value:1,
                     reflectToAttribute:true,
@@ -57,8 +51,7 @@
                     readOnly: true,
                     notify: true,
                     computed: '_calculateOffset(current,pageSize)'
-                },
-                total: Number
+                }
             },
             prev:function(){
 				      if  (this.current && this.current > 1) 
@@ -71,14 +64,29 @@
             _calculateOffset: function(current, pageSize) {
                 return (current - 1) * pageSize;
             },
-            _calculatePages: function(size, total) {
-                var totalPage =this.pageCount=   Math.ceil(total / size);
-                var result = []
+            _calculatePages: function (size, total, current_page) {
+                function start_link($p, $g, $n) {
+                    $s = $p - Math.floor($n / 2);
+                    if ($s < 1) {
+                        return 1;
+                    }
+                    $max_s = $g - ($n - 1);
+                    if ($s > $max_s) {
+                        return $max_s;
+                    }
+                    return $s;
+                }
+                var totalPage = this.pageCount = Math.ceil(total / size);
+                var result = [];
+                var startRange= start_link(current_page, totalPage, this.rangeSize);
+                var endRange = Math.min(totalPage,(startRange+this.rangeSize));
                 for (i = 1; i <= totalPage; i++) {
-                    result.push(i);
+                    hidden = ( i != 1 && i < startRange || i > endRange && i != this.pageCount);
+                    result.push({page:i, hidden: hidden});
                 }
                 return result;
-            }
+            },
+            
         })
     </script>
 </dom-module>
