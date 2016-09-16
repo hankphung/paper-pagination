@@ -28,7 +28,7 @@ currentPage | Number(*readonly*) | Current selected page
 offset | Number(*readonly*) | Use for offset (sql) or skip(blueprint API)
 ## Sample
 ```
-  <paper-pagin page-size="5" total="21" current-page="{{current}}" offset="{{skip}}"></paper-pagin>
+  <paper-pagination page-size="5" total="21" current-page="{{current}}" offset="{{skip}}"></paper-pagination>
   <span> page:{{current}} <br/> offset:{{skip}}</span>
 ```
 To observe the change on current, use observer
