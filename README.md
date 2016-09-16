@@ -18,13 +18,15 @@ Polymer pagination element. Input record count, pagesize to get list of page cho
 Clone this repo or install by bower. `bower install paper-pagination`
 ## Document
 **Properties**
+
 Properties | Type| Description
 ------------ | ------------- | -------------
-pageSize|Number| Number of items per page
-total|Number| Total items count
-rangeSize| Number| Number of visible page item on large collection.
-currentPage|Number(*readonly*)| Current selected page
-offset|Number(*readonly*)| Use for offset (sql) or skip(blueprint API)
+
+pageSize | Number | Number of items per page
+total | Number | Total items count
+rangeSize | Number | Number of visible page item on large collection.
+currentPage | Number(*readonly*) | Current selected page
+offset | Number(*readonly*) | Use for offset (sql) or skip(blueprint API)
 ## Sample
 ```
   <paper-pagin page-size="5" total="21" current-page="{{current}}" offset="{{skip}}"></paper-pagin>
