@@ -1,6 +1,6 @@
 {
   "name": "paper-pagination",
-  "version": "0.220",
+  "version": "0.2.0",
   "description": "A material design element that generate pagination bar",
   "authors": [
     "Dong Hung Phung"
