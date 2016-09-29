@@ -5,7 +5,7 @@
 
 <dom-module id="paper-pagination">
 	<style >
-		paper-item, paper-button{
+       paper-item.paper-pagination ,   paper-button.paper-pagination {
 			float: left;
 		}
 	</style>
@@ -13,9 +13,9 @@
 	    <!--<paper-button on-tap="prev">prev</paper-button>-->
 		  <paper-menu selected="{{current}}" selected-attribute="page">
 		      <!--hidden item take place 0 so, first item will be 1 -->
-			    <paper-item page="0" hidden="true"></paper-item>
+			    <paper-item class="paper-pagination" page="0" hidden="true"></paper-item>
   			  <template is="dom-repeat" items="[[pages]]" restamp="true">
-  		  		<paper-item page="[[item]]">[[item]]</paper-item>
+  		  		<paper-item  class="paper-pagination" page="[[item]]">[[item]]</paper-item>
   		  	</template>
 		  </paper-menu>
 		  <!--<paper-button on-tap="next">next</paper-button>-->
