@@ -1,6 +1,6 @@
 {
   "name": "paper-pagination",
-  "version": "0.2.1",
+  "version": "0.2.1.1",
   "description": "A material design element that generate pagination bar",
   "authors": [
     "Dong Hung Phung"
@@ -14,7 +14,7 @@
     "paper-pagination",
     "pagin"
   ],
-  "main": "paper-pagination.html",
+  "main": "src/paper-pagination.html",
   "repository": {
     "type": "git",
     "url": "git://github.com/PolymerElements/paper-material"
