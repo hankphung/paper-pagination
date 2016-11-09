@@ -1,0 +1,100 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-menu/paper-menu.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<dom-module id="paper-pagination">
+    <style>
+    paper-item.paper-pagination,
+    paper-button.paper-pagination {
+        float: left;
+    }
+    .paper-pagination-list{
+        overflow: auto;
+    }
+    </style>
+    <template>
+        <!--<paper-button on-tap="prev">prev</paper-button>-->
+        <paper-menu class="paper-pagination-list" selected="{{current}}" selected-attribute="page">
+            <!--hidden item take place 0 so, first item will be 1 
+                <paper-item class="paper-pagination" page="0" hidden="true"></paper-item>-->
+            <template is="dom-repeat" items="[[pages]]" restamp="true">
+                <paper-item class="paper-pagination"  hidden$="[[item.hidden]]"  page="[[item.page]]">[[item.page]]</paper-item>
+            </template>
+        </paper-menu>
+        <!--<paper-button on-tap="next">next</paper-button>-->
+    </template>
+    <script>
+    Polymer({
+        is: 'paper-pagination',
+        properties: {
+            pageSize: {
+                type: Number
+            },
+            total: {
+                type: Number
+            },
+            pages: {
+                type: Array,
+                readOnly: true,
+                computed: '_calculatePages(pageSize,total)'
+            },
+            rangeSize: {
+                type: Number,
+                value: 10,
+            },
+            currentPage: {
+                type: Number,
+                value: 1,
+                reflectToAttribute: true,
+                notify: true,
+            },
+            offset: {
+                type: Number,
+                readOnly: true,
+                notify: true,
+                computed: '_calculateOffset(current,pageSize)'
+            }
+        },
+        ready:function(){
+         
+        },
+        prev: function() {
+            if (this.current && this.current > 1)
+                this.current -= 1;
+        },
+        next: function() {
+            if (this.current && this.current < this.pageCount)
+                this.current += 1;
+        },
+        _calculateOffset: function(current, pageSize) {
+            return (current - 1) * pageSize;
+        },
+        _calculatePages: function(size, total, current_page) {
+            function start_link($p, $g, $n) {
+                $s = $p - Math.floor($n / 2);
+                if ($s < 1) {
+                    return 1;
+                }
+                $max_s = $g - ($n - 1);
+                if ($s > $max_s) {
+                    return $max_s;
+                }
+                return $s;
+            }
+            var totalPage = this.pageCount = Math.ceil(total / size);
+            var result = [];
+            var startRange = start_link(current_page, totalPage, this.rangeSize);
+            var endRange = Math.min(totalPage, (startRange + this.rangeSize));
+            for (i = 1; i <= totalPage; i++) {
+                hidden = (i != 1 && i < startRange || i > endRange && i != this.pageCount);
+                result.push({
+                    page: i,
+                    hidden: hidden
+                });
+            }
+            return result;
+        },
+
+    })
+    </script>
+</dom-module>
