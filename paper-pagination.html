@@ -8,10 +8,13 @@
     paper-button.paper-pagination {
         float: left;
     }
+    .paper-pagination-list{
+        overflow: auto;
+    }
     </style>
     <template>
         <!--<paper-button on-tap="prev">prev</paper-button>-->
-        <paper-menu selected="{{current}}" selected-attribute="page">
+        <paper-menu class="paper-pagination-list" selected="{{current}}" selected-attribute="page">
             <!--hidden item take place 0 so, first item will be 1 
                 <paper-item class="paper-pagination" page="0" hidden="true"></paper-item>-->
             <template is="dom-repeat" items="[[pages]]" restamp="true">
