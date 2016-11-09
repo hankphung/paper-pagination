@@ -20,7 +20,7 @@
     "url": "git://github.com/PolymerElements/paper-material"
   },
   "license": "https://opensource.org/licenses/MIT",
-  "homepage": "https://github.com/dannyphung/paper-pagination/",
+  "homepage": "https://dannyphung.github.io/paper-pagination",
   "ignore": [],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.1.0",
