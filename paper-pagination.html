@@ -1,100 +1,177 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../paper-menu/paper-menu.html">
 <link rel="import" href="../paper-item/paper-item.html">
-<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <dom-module id="paper-pagination">
     <style>
+
+    [hidden] {
+        display: none !important;
+    }
+    [pointer] {
+        cursor: pointer;
+    }
     paper-item.paper-pagination,
     paper-button.paper-pagination {
         float: left;
     }
-    .paper-pagination-list{
-        overflow: auto;
+
+    #content {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
     }
     </style>
     <template>
-        <!--<paper-button on-tap="prev">prev</paper-button>-->
-        <paper-menu class="paper-pagination-list" selected="{{current}}" selected-attribute="page">
-            <!--hidden item take place 0 so, first item will be 1 
-                <paper-item class="paper-pagination" page="0" hidden="true"></paper-item>-->
-            <template is="dom-repeat" items="[[pages]]" restamp="true">
-                <paper-item class="paper-pagination"  hidden$="[[item.hidden]]"  page="[[item.page]]">[[item.page]]</paper-item>
+        <div id="content" hidden$="[[hiddenPagination(pages)]]">
+            <paper-icon-button id="prev" on-tap="prev" icon="icons:chevron-left"></paper-icon-button>
+            <paper-menu id="pages" selected="{{currentPage}}" selected-attribute="page">
+                <template is="dom-repeat" items="[[pages]]">
+                    <paper-item class="paper-pagination" hidden$="[[item.hidden]]" page="[[item.page]]" pointer>[[item.label]]</paper-item>
             </template>
         </paper-menu>
-        <!--<paper-button on-tap="next">next</paper-button>-->
+            <paper-icon-button id="next" on-tap="next" icon="icons:chevron-right"></paper-icon-button>
+        </div>
     </template>
     <script>
     Polymer({
         is: 'paper-pagination',
+
+        behaviors: [
+            Polymer.IronResizableBehavior
+        ],
+
+        listeners: {
+            'iron-resize': 'onResize'
+            },
+
+        attached: function() {
+            this.async(this.notifyResize, 1);
+            },
         properties: {
-            pageSize: {
-                type: Number
-            },
-            total: {
-                type: Number
-            },
+            pageSize: Number,
+            total:  Number,
             pages: {
                 type: Array,
-                readOnly: true,
-                computed: '_calculatePages(pageSize,total)'
+                value: []
             },
             rangeSize: {
                 type: Number,
-                value: 10,
+                value: 10
             },
             currentPage: {
                 type: Number,
-                value: 1,
                 reflectToAttribute: true,
                 notify: true,
             },
-            offset: {
-                type: Number,
-                readOnly: true,
-                notify: true,
-                computed: '_calculateOffset(current,pageSize)'
+            hidden: {
+                type: Boolean,
+                notify: true
             }
         },
+        observers: [
+          'currentPageChanged(currentPage)',
+          'rangeSizeChanged(rangeSize)',
+          'pagesChanged(pageSize, total)'
+        ],
+
         ready:function(){
+            this.itemWidth = 50;
+            this.prevWidth = this.nextWidth = 40;
+            this.currentPage = 0;
+        },
          
-        },
-        prev: function() {
-            if (this.current && this.current > 1)
-                this.current -= 1;
-        },
-        next: function() {
-            if (this.current && this.current < this.pageCount)
-                this.current += 1;
-        },
-        _calculateOffset: function(current, pageSize) {
-            return (current - 1) * pageSize;
-        },
-        _calculatePages: function(size, total, current_page) {
-            function start_link($p, $g, $n) {
-                $s = $p - Math.floor($n / 2);
-                if ($s < 1) {
-                    return 1;
-                }
-                $max_s = $g - ($n - 1);
-                if ($s > $max_s) {
-                    return $max_s;
-                }
-                return $s;
-            }
-            var totalPage = this.pageCount = Math.ceil(total / size);
-            var result = [];
-            var startRange = start_link(current_page, totalPage, this.rangeSize);
-            var endRange = Math.min(totalPage, (startRange + this.rangeSize));
-            for (i = 1; i <= totalPage; i++) {
-                hidden = (i != 1 && i < startRange || i > endRange && i != this.pageCount);
-                result.push({
-                    page: i,
-                    hidden: hidden
-                });
-            }
-            return result;
+        prev: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.currentPage = Math.max(this.currentPage - 1, 0);
         },
 
+        next: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.currentPage = Math.min(this.currentPage + 1, this.pageCount - 1);
+        },
+
+        hiddenPagination: function(pages) {
+            this.set("hidden", pages.length <= 1);
+            return this.hidden;
+        },
+
+        pagesChanged: function(size, total) {
+            var totalPage = this.pageCount = Math.ceil(total / size);
+            var result = [];
+            for (var i = 0; i < totalPage; i++) {
+                result.push({
+                    page: i,
+                    label: i + 1,
+                    hidden: true
+                });
+            }
+            
+            this.set("pages", result);
+            this.currentPageChanged(this.currentPage);
+        },
+
+        currentPageChanged: function(currentPage) {
+            this.$.prev.disabled = currentPage == 0;
+            this.$.next.disabled = currentPage == this.pageCount - 1;
+
+            var rangeSizeIndex = this.rangeSize - 1;
+            var start = 0;
+            var end = Math.min(rangeSizeIndex, this.pageCount);
+            var mid = Math.floor(rangeSizeIndex / 2);
+
+            if (currentPage > mid ) {
+                start = currentPage - mid;
+                end = start + rangeSizeIndex;
+            }
+
+            if (currentPage > this.pageCount - mid - 1 ) {
+                end = this.pageCount - 1;
+                start = end - rangeSizeIndex;
+            }
+
+            for (var i = 0; i < this.pages.length; i++) {    
+                this.set("pages." + i + ".hidden", i < start || i > end);
+            }
+
+            var myEffect = new KeyframeEffect(document.body, [], { duration: 350, easing: "ease-out" }); 
+            var scrollTop = document.body.scrollTop;
+
+            myEffect.onsample = function(timeFraction, effect, animation) {
+                timeFraction = timeFraction == null ? 1 : timeFraction;
+                effect.target.scrollTop = scrollTop - (scrollTop * timeFraction); 
+            }; 
+            var myAnimation = document.timeline.play(myEffect);
+        },
+
+        rangeSizeChanged: function(rangeSize) {
+            this.currentPageChanged(this.currentPage);
+        },
+
+        onResize: function() {
+            var content = this.$.content.getBoundingClientRect();
+            if (content.top == 0 && content.bottom == 0) return;
+            var width = content.right - content.left;
+            var height = content.top - content.bottom;
+            visible = this.pages.filter(function(item) {
+                return !item.hidden;
+            }).length;
+
+            var items = Math.floor((width - 40 - (this.prevWidth + this.nextWidth)) / this.itemWidth); //40 for bonus space
+            
+            if (visible > items) {
+                this.previousRangeSize = this.rangeSize;
+                this.rangeSize = items;
+            }
+            else if(this.previousRangeSize && visible < items) {
+                var previousRangeSize = this.previousRangeSize;
+                delete this.previousRangeSize;
+                this.rangeSize = previousRangeSize;
+            }
+        }
     })
     </script>
 </dom-module>
