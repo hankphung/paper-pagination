@@ -2,6 +2,7 @@
 <link rel="import" href="../paper-menu/paper-menu.html">
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
+
 <dom-module id="paper-pagination">
     <style>
 
@@ -11,11 +12,13 @@
     [pointer] {
         cursor: pointer;
     }
-    paper-item.paper-pagination,
-    paper-button.paper-pagination {
-        float: left;
+    paper-listbox {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
     }
-
+    
     #content {
         display: flex;
         flex-direction: row;
@@ -26,11 +29,11 @@
     <template>
         <div id="content" hidden$="[[hiddenPagination(pages)]]">
             <paper-icon-button id="prev" on-tap="prev" icon="icons:chevron-left"></paper-icon-button>
-            <paper-menu id="pages" selected="{{currentPage}}" selected-attribute="page">
+            <paper-listbox id="pages" selected="{{currentPage}}" selected-attribute="page">
                 <template is="dom-repeat" items="[[pages]]">
                     <paper-item class="paper-pagination" hidden$="[[item.hidden]]" page="[[item.page]]" pointer>[[item.label]]</paper-item>
-            </template>
-        </paper-menu>
+                </template>
+            </paper-listbox>
             <paper-icon-button id="next" on-tap="next" icon="icons:chevron-right"></paper-icon-button>
         </div>
     </template>
