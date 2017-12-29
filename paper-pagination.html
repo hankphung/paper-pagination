@@ -18,7 +18,7 @@
         justify-content: space-around;
         align-items: center;
     }
-    
+
     #content {
         display: flex;
         flex-direction: row;
@@ -28,13 +28,13 @@
     </style>
     <template>
         <div id="content" hidden$="[[hiddenPagination(pages)]]">
-            <paper-icon-button id="prev" on-tap="prev" icon="icons:chevron-left"></paper-icon-button>
+            <paper-icon-button id="prev" on-tap="prev" icon="chevron-left"></paper-icon-button>
             <paper-listbox id="pages" selected="{{currentPage}}" selected-attribute="page">
                 <template is="dom-repeat" items="[[pages]]">
                     <paper-item class="paper-pagination" hidden$="[[item.hidden]]" page="[[item.page]]" pointer>[[item.label]]</paper-item>
                 </template>
             </paper-listbox>
-            <paper-icon-button id="next" on-tap="next" icon="icons:chevron-right"></paper-icon-button>
+            <paper-icon-button id="next" on-tap="next" icon="chevron-right"></paper-icon-button>
         </div>
     </template>
     <script>
