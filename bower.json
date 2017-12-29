@@ -1,6 +1,6 @@
 {
   "name": "paper-pagination",
-  "version": "2.0.0-beta.0",
+  "version": "2.0.0",
   "description": "A material design element inspire by Danny Phung that generate pagination bar",
   "authors": [
     "Benoit Claveau <benoit.claveau@gmail>"
