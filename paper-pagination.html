@@ -5,26 +5,24 @@
 
 <dom-module id="paper-pagination">
     <style>
-
-    [hidden] {
-        display: none !important;
-    }
-    [pointer] {
-        cursor: pointer;
-    }
-    paper-listbox {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-    }
-
-    #content {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-    }
+        :host [hidden] {
+            display: none !important;
+        }
+        :host [pointer] {
+            cursor: pointer;
+        }
+        :host paper-listbox {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+        }
+        :host #content {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
     <template>
         <div id="content" hidden$="[[hiddenPagination(pages)]]">
@@ -38,143 +36,143 @@
         </div>
     </template>
     <script>
-    Polymer({
-        is: 'paper-pagination',
+        Polymer({
+            is: 'paper-pagination',
 
-        behaviors: [
-            Polymer.IronResizableBehavior
-        ],
+            behaviors: [
+                Polymer.IronResizableBehavior
+            ],
 
-        listeners: {
-            'iron-resize': 'onResize'
+            listeners: {
+                'iron-resize': 'onResize'
+                },
+
+            attached: function() {
+                this.async(this.notifyResize, 1);
+                },
+            properties: {
+                pageSize: Number,
+                total:  Number,
+                pages: {
+                    type: Array,
+                    value: []
+                },
+                rangeSize: {
+                    type: Number,
+                    value: 10
+                },
+                current: {
+                    type: Number,
+                    reflectToAttribute: true,
+                    notify: true,
+                },
+                hidden: {
+                    type: Boolean,
+                    notify: true
+                }
             },
+            observers: [
+            'currentPageChanged(currentPage)',
+            'rangeSizeChanged(rangeSize)',
+            'pagesChanged(pageSize, total)'
+            ],
 
-        attached: function() {
-            this.async(this.notifyResize, 1);
+            ready:function(){
+                this.itemWidth = 50;
+                this.prevWidth = this.nextWidth = 40;
+                this.currentPage = 0;
             },
-        properties: {
-            pageSize: Number,
-            total:  Number,
-            pages: {
-                type: Array,
-                value: []
-            },
-            rangeSize: {
-                type: Number,
-                value: 10
-            },
-            current: {
-                type: Number,
-                reflectToAttribute: true,
-                notify: true,
-            },
-            hidden: {
-                type: Boolean,
-                notify: true
-            }
-        },
-        observers: [
-          'currentPageChanged(currentPage)',
-          'rangeSizeChanged(rangeSize)',
-          'pagesChanged(pageSize, total)'
-        ],
-
-        ready:function(){
-            this.itemWidth = 50;
-            this.prevWidth = this.nextWidth = 40;
-            this.currentPage = 0;
-        },
-         
-        prev: function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            this.currentPage = Math.max(this.currentPage - 1, 0);
-        },
-
-        next: function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            this.currentPage = Math.min(this.currentPage + 1, this.pageCount - 1);
-        },
-
-        hiddenPagination: function(pages) {
-            this.set("hidden", pages.length <= 1);
-            return this.hidden;
-        },
-
-        pagesChanged: function(size, total) {
-            var totalPage = this.pageCount = Math.ceil(total / size);
-            var result = [];
-            for (var i = 0; i < totalPage; i++) {
-                result.push({
-                    page: i,
-                    label: i + 1,
-                    hidden: true
-                });
-            }
             
-            this.set("pages", result);
-            this.currentPageChanged(this.currentPage);
-        },
+            prev: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.currentPage = Math.max(this.currentPage - 1, 0);
+            },
 
-        currentPageChanged: function(currentPage) {
-            this.$.prev.disabled = currentPage == 0;
-            this.$.next.disabled = currentPage == this.pageCount - 1;
+            next: function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.currentPage = Math.min(this.currentPage + 1, this.pageCount - 1);
+            },
 
-            var rangeSizeIndex = this.rangeSize - 1;
-            var start = 0;
-            var end = Math.min(rangeSizeIndex, this.pageCount);
-            var mid = Math.floor(rangeSizeIndex / 2);
+            hiddenPagination: function(pages) {
+                this.set("hidden", pages.length <= 1);
+                return this.hidden;
+            },
 
-            if (currentPage > mid ) {
-                start = currentPage - mid;
-                end = start + rangeSizeIndex;
+            pagesChanged: function(size, total) {
+                var totalPage = this.pageCount = Math.ceil(total / size);
+                var result = [];
+                for (var i = 0; i < totalPage; i++) {
+                    result.push({
+                        page: i,
+                        label: i + 1,
+                        hidden: true
+                    });
+                }
+                
+                this.set("pages", result);
+                this.currentPageChanged(this.currentPage);
+            },
+
+            currentPageChanged: function(currentPage) {
+                this.$.prev.disabled = currentPage == 0;
+                this.$.next.disabled = currentPage == this.pageCount - 1;
+
+                var rangeSizeIndex = this.rangeSize - 1;
+                var start = 0;
+                var end = Math.min(rangeSizeIndex, this.pageCount);
+                var mid = Math.floor(rangeSizeIndex / 2);
+
+                if (currentPage > mid ) {
+                    start = currentPage - mid;
+                    end = start + rangeSizeIndex;
+                }
+
+                if (currentPage > this.pageCount - mid - 1 ) {
+                    end = this.pageCount - 1;
+                    start = end - rangeSizeIndex;
+                }
+
+                for (var i = 0; i < this.pages.length; i++) {    
+                    this.set("pages." + i + ".hidden", i < start || i > end);
+                }
+
+                var myEffect = new KeyframeEffect(document.body, [], { duration: 350, easing: "ease-out" }); 
+                var scrollTop = document.body.scrollTop;
+
+                myEffect.onsample = function(timeFraction, effect, animation) {
+                    timeFraction = timeFraction == null ? 1 : timeFraction;
+                    effect.target.scrollTop = scrollTop - (scrollTop * timeFraction); 
+                }; 
+                var myAnimation = document.timeline.play(myEffect);
+            },
+
+            rangeSizeChanged: function(rangeSize) {
+                this.currentPageChanged(this.currentPage);
+            },
+
+            onResize: function() {
+                var content = this.$.content.getBoundingClientRect();
+                if (content.top == 0 && content.bottom == 0) return;
+                var width = content.right - content.left;
+                var height = content.top - content.bottom;
+                visible = this.pages.filter(function(item) {
+                    return !item.hidden;
+                }).length;
+
+                var items = Math.floor((width - 40 - (this.prevWidth + this.nextWidth)) / this.itemWidth); //40 for bonus space
+                
+                if (visible > items) {
+                    this.previousRangeSize = this.rangeSize;
+                    this.rangeSize = items;
+                }
+                else if(this.previousRangeSize && visible < items) {
+                    var previousRangeSize = this.previousRangeSize;
+                    delete this.previousRangeSize;
+                    this.rangeSize = previousRangeSize;
+                }
             }
-
-            if (currentPage > this.pageCount - mid - 1 ) {
-                end = this.pageCount - 1;
-                start = end - rangeSizeIndex;
-            }
-
-            for (var i = 0; i < this.pages.length; i++) {    
-                this.set("pages." + i + ".hidden", i < start || i > end);
-            }
-
-            var myEffect = new KeyframeEffect(document.body, [], { duration: 350, easing: "ease-out" }); 
-            var scrollTop = document.body.scrollTop;
-
-            myEffect.onsample = function(timeFraction, effect, animation) {
-                timeFraction = timeFraction == null ? 1 : timeFraction;
-                effect.target.scrollTop = scrollTop - (scrollTop * timeFraction); 
-            }; 
-            var myAnimation = document.timeline.play(myEffect);
-        },
-
-        rangeSizeChanged: function(rangeSize) {
-            this.currentPageChanged(this.currentPage);
-        },
-
-        onResize: function() {
-            var content = this.$.content.getBoundingClientRect();
-            if (content.top == 0 && content.bottom == 0) return;
-            var width = content.right - content.left;
-            var height = content.top - content.bottom;
-            visible = this.pages.filter(function(item) {
-                return !item.hidden;
-            }).length;
-
-            var items = Math.floor((width - 40 - (this.prevWidth + this.nextWidth)) / this.itemWidth); //40 for bonus space
-            
-            if (visible > items) {
-                this.previousRangeSize = this.rangeSize;
-                this.rangeSize = items;
-            }
-            else if(this.previousRangeSize && visible < items) {
-                var previousRangeSize = this.previousRangeSize;
-                delete this.previousRangeSize;
-                this.rangeSize = previousRangeSize;
-            }
-        }
-    })
+        })
     </script>
 </dom-module>
