@@ -24,7 +24,8 @@
     "polymer": "Polymer/polymer#^2.5.0",
     "paper-button": "polymerelements/paper-button#^2.0.0",
     "paper-listbox": "polymerelements/paper-listbox#^2.0.0",
-    "paper-item": "polymerelements/paper-item#^2.0.0"
+    "paper-item": "polymerelements/paper-item#^2.0.0",
+	"web-animations-js": "^2.3.1"
   },
   "devDependencies": {
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.22",
