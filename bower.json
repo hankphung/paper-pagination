@@ -1,6 +1,6 @@
 {
   "name": "paper-pagination",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "A material design element inspire by Danny Phung that generate pagination bar",
   "authors": [
     "Benoit Claveau <benoit.claveau@gmail>"
@@ -21,10 +21,11 @@
   "homepage": "https://dannyphung.github.io/paper-pagination",
   "ignore": [],
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.3.1",
+    "polymer": "Polymer/polymer#^2.5.0",
     "paper-button": "polymerelements/paper-button#^2.0.0",
     "paper-listbox": "polymerelements/paper-listbox#^2.0.0",
-    "paper-item": "polymerelements/paper-item#^2.0.0"
+    "paper-item": "polymerelements/paper-item#^2.0.0",
+    "web-animations-js": "^2.3.1"
   },
   "devDependencies": {
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.22",
