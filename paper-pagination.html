@@ -17,7 +17,7 @@
         <div hidden$="[[hiddenPagination(pages)]]" class="paper-pagination-container" style="display:flex;flex-direction:row;justify-content:center;align-items: center;">
             <paper-icon-button id="first" on-tap="first" icon="first-page" hidden$="[[hiddenFirstPageButton]]"></paper-icon-button>
             <paper-icon-button id="prev" on-tap="prev" icon="chevron-left" hidden$="[[hiddenPreviousPageButton]]"></paper-icon-button>
-            <paper-listbox id="pages" selected="{{current}}" selected-attribute="page" style="display:flex;flex-direction:row;justify-content:center;align-items: center;">
+            <paper-listbox id="pages" selected="{{currentPage}}" selected-attribute="page" style="display:flex;flex-direction:row;justify-content:center;align-items: center;">
                 <template is="dom-repeat" items="[[pages]]">
                     <paper-item class="paper-pagination" hidden$="[[item.hidden]]" page="[[item.page]]" pointer>[[item.label]]</paper-item>
                 </template>
@@ -44,7 +44,14 @@
 
             properties: {
                 pageSize: Number,
-                pageCount: Number,
+                pageCount: {
+                    type: Number,
+                    reflectToAttribute: true,
+                    notify: true,
+                    value: function() {
+                        return 1;
+                    }
+                },
                 total:  Number,
                 pages: {
                     type: Array,
@@ -52,12 +59,19 @@
                 },
                 rangeSize: {
                     type: Number,
-                    value: 10
+                    reflectToAttribute: true,
+                    notify: true,
+                    value: function() {
+                        return 10;
+                    }
                 },
-                current: {
+                currentPage: {
                     type: Number,
                     reflectToAttribute: true,
                     notify: true,
+                    value: function() {
+                        return 0;
+                    }
                 },
                 hidden: {
                     type: Boolean,
@@ -69,7 +83,7 @@
                 hiddenPreviousPageButton: Boolean
             },
             observers: [
-            'currentChanged(current)',
+            'currentPageChanged(currentPage)',
             'rangeSizeChanged(rangeSize)',
             'pagesChanged(pageSize, total)'
             ],
@@ -82,25 +96,25 @@
             prev: function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                this.set("current", Math.max(this.current - 1, 0));
+                this.set("currentPage", Math.max(this.currentPage - 1, 0));
             },
 
             next: function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                this.set("current", Math.min(this.current + 1, this.pageCount - 1));
+                this.set("currentPage", Math.min(this.currentPage + 1, this.pageCount - 1));
             },
 
             first: function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                this.set("current", 0);
+                this.set("currentPage", 0);
             },
 
             last: function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                this.set("current", this.pageCount - 1);
+                this.set("currentPage", this.pageCount - 1);
             },
 
             hiddenPagination: function(pages) {
@@ -120,24 +134,24 @@
                 }
                 
                 this.set("pages", result);
-                this.currentChanged(this.current);
+                this.currentPageChanged(this.currentPage);
             },
 
-            currentChanged: function(current) {
-                this.$.prev.disabled = current == 0;
-                this.$.next.disabled = current == this.pageCount - 1;
+            currentPageChanged: function(currentPage) {
+                this.$.prev.disabled = currentPage == 0;
+                this.$.next.disabled = currentPage == this.pageCount - 1;
 
                 var rangeSizeIndex = this.rangeSize - 1;
                 var start = 0;
                 var end = Math.min(rangeSizeIndex, this.pageCount);
                 var mid = Math.floor(rangeSizeIndex / 2);
 
-                if (current > mid ) {
-                    start = current - mid;
+                if (currentPage > mid ) {
+                    start = currentPage - mid;
                     end = start + rangeSizeIndex;
                 }
 
-                if (current > this.pageCount - mid - 1 ) {
+                if (currentPage > this.pageCount - mid - 1 ) {
                     end = this.pageCount - 1;
                     start = end - rangeSizeIndex;
                 }
@@ -157,7 +171,7 @@
             },
 
             rangeSizeChanged: function(rangeSize) {
-                this.currentChanged(this.current);
+                this.currentPageChanged(this.currentPage);
             },
 
             onResize: function() {
@@ -174,12 +188,12 @@
                 
                 if (visible > items) {
                     this.previousRangeSize = this.rangeSize;
-                    this.rangeSize = items;
+                    this.set("rangeSize", items);
                 }
                 else if(this.previousRangeSize && visible < items) {
                     var previousRangeSize = this.previousRangeSize;
                     delete this.previousRangeSize;
-                    this.rangeSize = previousRangeSize;
+                    this.set("rangeSize", previousRangeSize);
                 }
             }
         })

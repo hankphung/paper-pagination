@@ -3,6 +3,7 @@
   "version": "2.0.2",
   "description": "A material design element inspire by Danny Phung that generate pagination bar",
   "authors": [
+    "Dong Hung Phung",
     "Benoit Claveau <benoit.claveau@gmail>"
   ],
   "keywords": [
@@ -25,7 +26,8 @@
     "paper-button": "polymerelements/paper-button#^2.0.0",
     "paper-listbox": "polymerelements/paper-listbox#^2.0.0",
     "paper-item": "polymerelements/paper-item#^2.0.0",
-    "web-animations-js": "^2.3.1"
+    "web-animations-js": "^2.3.1",
+    "neon-animation": "^2.2.0"
   },
   "devDependencies": {
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.22",
