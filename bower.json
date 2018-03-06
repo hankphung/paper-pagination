@@ -3,7 +3,7 @@
   "version": "0.2.2.1",
   "description": "A material design element that generate pagination bar",
   "authors": [
-    "Dong Hung Phung"
+    "Dong Hung Phung <donghung.viethanit@gmail.com>"
   ],
   "keywords": [
     "web-components",
@@ -20,7 +20,7 @@
     "url": "git://github.com/PolymerElements/paper-material"
   },
   "license": "https://opensource.org/licenses/MIT",
-  "homepage": "https://github.com/dannyphung/paper-pagination/",
+  "homepage": "https://github.com/hankphung/paper-pagination/",
   "ignore": [],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.1.0",
