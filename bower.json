@@ -3,7 +3,7 @@
   "version": "2.0.2",
   "description": "A material design element inspire by Danny Phung that generate pagination bar",
   "authors": [
-    "Dong Hung Phung",
+    "Dong Hung Phung <donghung.viethanit@gmail.com>",
     "Benoit Claveau <benoit.claveau@gmail>"
   ],
   "keywords": [
@@ -18,8 +18,8 @@
     "type": "git",
     "url": "git://github.com/PolymerElements/paper-material"
   },
-  "license": "MIT",
-  "homepage": "https://dannyphung.github.io/paper-pagination",
+  "license": "https://opensource.org/licenses/MIT",
+  "homepage": "https://github.com/hankphung/paper-pagination/",
   "ignore": [],
   "dependencies": {
     "polymer": "Polymer/polymer#^2.5.0",
