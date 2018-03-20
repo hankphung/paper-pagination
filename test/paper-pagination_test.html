@@ -13,26 +13,25 @@
 <body>
     <test-fixture id="basic">
         <template>
-            <paper-pagination page-size="5" total="21" current-page="{{current}}" offset="{{skip}}" id="pagin"></paper-pagination>
+            <paper-pagination page-size="5" total="21" current-page="{{currentPage}}" id="pagin"></paper-pagination>
         </template>
     </test-fixture>
     <script>
     suite('paper-pagination', function() {
         var element ;
 
-
         test('instantiating the element works', function() {
-         element= fixture('basic',{current: 1,skip:0});   
+         element= fixture('basic',{currentPage: 1,skip:0});   
             assert.equal(element.is, 'paper-pagination');
         });
         test('should generate correct page size', function() {
-            element= fixture('basic',{current: 1,skip:0});
+            element= fixture('basic',{currentPage: 1,skip:0});
               Polymer.dom.flush()
             assert.equal(element.children[0].children[0].children.length, 6)
         });
 
         test('page item should be number', function() {
-            element= fixture('basic',{current: 1,skip:0});  Polymer.dom.flush()
+            element= fixture('basic',{currentPage: 1,skip:0});  Polymer.dom.flush()
             assert.equal(parseInt(element.children[0].children[0].children[0].textContent), 1);
         });
         /*  test('item should be number', function() {
