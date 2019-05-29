@@ -11,7 +11,7 @@
 
 ```
 # paper-pagination
-Polymer pagination element. Input record count, pagesize to get list of page chooser. [Demo](https://dannyphung.github.io/paper-pagination/components/paper-pagination/demo/)
+Polymer pagination element. Input record count, pagesize to get list of page chooser. [Demo](https://hankphung.github.io/paper-pagination/components/paper-pagination/demo/)
 ![screenshot-localhost 8080 2016-09-16 08-39-04](https://cloud.githubusercontent.com/assets/2910175/18572865/2a8267ee-7be9-11e6-945c-b651b30e8218.png)
 
 ## Setup
